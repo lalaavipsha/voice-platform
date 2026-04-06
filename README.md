@@ -2,11 +2,15 @@
 
 An AI-powered voice conversation platform. Speak to the AI, and it responds with voice — powered entirely by AWS AI services (Transcribe + Bedrock + Polly), deployed on AWS.
 
+### 🚀 [Live Demo → https://d2xy0r5ne2t43p.cloudfront.net](https://d2xy0r5ne2t43p.cloudfront.net)
+
+> API Docs (Swagger): [https://d2xy0r5ne2t43p.cloudfront.net/docs](https://d2xy0r5ne2t43p.cloudfront.net/docs)
+
 ## Architecture
 
 ```
 User → Next.js Frontend → FastAPI Backend → AWS AI Services
-         (Amplify)          (ECS/Fargate)    (Transcribe, Bedrock, Polly)
+       (S3 + CloudFront)   (ECS/Fargate)    (Transcribe, Bedrock, Polly)
 ```
 
 **Voice Flow:**
@@ -26,7 +30,7 @@ User → Next.js Frontend → FastAPI Backend → AWS AI Services
 | AI (STT) | Amazon Transcribe |
 | AI (LLM) | Amazon Bedrock (Claude 3 Haiku) |
 | AI (TTS) | Amazon Polly (Neural voices) |
-| Infrastructure | AWS ECS Fargate, Amplify, S3, DynamoDB |
+| Infrastructure | AWS ECS Fargate, S3, CloudFront, DynamoDB |
 | CI/CD | GitHub Actions |
 | Containers | Docker (Colima on macOS) |
 | IaC | CloudFormation |
@@ -44,7 +48,7 @@ User → Next.js Frontend → FastAPI Backend → AWS AI Services
 ### 1. Clone & Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/voice-platform.git
+git clone https://github.com/lalaavipsha/voice-platform.git
 cd voice-platform
 make setup
 ```
@@ -61,7 +65,7 @@ cp backend/.env.example backend/.env
 ```bash
 # Make sure AWS CLI is configured
 aws configure
-# Region: us-east-1 (or your preferred region)
+# Region: eu-west-2 (or your preferred region)
 
 # Enable Bedrock model access (one-time):
 # Go to AWS Console → Bedrock → Model access → Enable Claude 3 Haiku
@@ -157,7 +161,7 @@ make clean         # Remove build artifacts
 
 ## Deployment
 
-### Backend (ECS)
+### Backend (ECS Fargate)
 
 The backend deploys automatically via GitHub Actions when you push to `main`:
 
@@ -165,9 +169,15 @@ The backend deploys automatically via GitHub Actions when you push to `main`:
 2. Docker image built and pushed to ECR
 3. ECS service updated with new image
 
-### Frontend (Amplify)
+### Frontend (S3 + CloudFront)
 
-Connect your GitHub repo to AWS Amplify in the AWS Console. Amplify auto-deploys on push to `main`.
+The frontend is exported as a static site (`next export`) and hosted on S3 with CloudFront as the CDN. Deploy with:
+
+```bash
+cd frontend && npm run build
+aws s3 sync out/ s3://voice-platform-frontend-<ACCOUNT_ID> --delete
+aws cloudfront create-invalidation --distribution-id <DIST_ID> --paths "/*"
+```
 
 ### Infrastructure
 
@@ -188,8 +198,8 @@ aws cloudformation deploy \
 | Amazon Bedrock (Claude) | AI Chat/LLM | Pay per token (~$0.25/1M input) |
 | Amazon Polly | Text-to-Speech | 5M chars/mo (12 months) |
 | ECS Fargate | Container hosting | None (use small tasks) |
-| S3 | Audio file storage | 5GB free |
-| Amplify | Frontend hosting | 1000 build min/mo |
+| S3 | Audio + frontend hosting | 5GB free |
+| CloudFront | CDN / frontend delivery | 1TB transfer/mo (12 months) |
 | DynamoDB | Conversation storage | 25GB free |
 | CloudWatch | Monitoring & logs | Basic free |
 
@@ -197,8 +207,8 @@ aws cloudformation deploy \
 
 - [x] Phase 1: Project structure & local dev
 - [x] Phase 2: AI voice MVP (AWS AI integration)
-- [ ] Phase 3: Containerize & deploy to AWS
-- [ ] Phase 4: CI/CD pipeline
+- [x] Phase 3: Containerize & deploy to AWS
+- [x] Phase 4: CI/CD pipeline
 - [ ] Phase 5: Security & monitoring
 - [ ] Phase 6: Scale & optimize
 

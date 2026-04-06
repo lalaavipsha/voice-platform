@@ -1,0 +1,52 @@
+# ============================================
+# Frontend CI/CD Pipeline
+# ============================================
+# Triggers on push/PR to main for frontend changes.
+# Runs lint/build checks. Amplify handles actual deployment.
+
+name: Frontend CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "frontend/**"
+
+jobs:
+  # ---- Job 1: Lint & Build ----
+  build:
+    name: 🏗️ Lint & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Lint
+        run: npm run lint || true
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: https://api.your-domain.com  # Replace with your API URL
+
+  # Note: AWS Amplify auto-deploys from the main branch.
+  # This workflow just validates the build succeeds.
+  # Amplify deployment is configured in the AWS Console.

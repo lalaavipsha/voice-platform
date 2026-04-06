@@ -2,10 +2,6 @@
 
 An AI-powered voice conversation platform. Speak to the AI, and it responds with voice — powered entirely by AWS AI services (Transcribe + Bedrock + Polly), deployed on AWS.
 
-### 🚀 [Live Demo → https://d2xy0r5ne2t43p.cloudfront.net](https://d2xy0r5ne2t43p.cloudfront.net)
-
-> API Docs (Swagger): [https://d2xy0r5ne2t43p.cloudfront.net/docs](https://d2xy0r5ne2t43p.cloudfront.net/docs)
-
 ## Architecture
 
 ```

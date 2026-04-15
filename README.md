@@ -24,7 +24,7 @@ User → Next.js Frontend → FastAPI Backend → AWS AI Services
 | Frontend | Next.js 14, TypeScript, React |
 | Backend | Python 3.12, FastAPI |
 | AI (STT) | Amazon Transcribe |
-| AI (LLM) | Amazon Bedrock (Claude 3 Haiku) |
+| AI (LLM) | Amazon Bedrock (Claude 3.5 Haiku) |
 | AI (TTS) | Amazon Polly (Neural voices) |
 | Infrastructure | AWS ECS Fargate, S3, CloudFront, DynamoDB |
 | CI/CD | GitHub Actions |

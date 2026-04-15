@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     DYNAMODB_TABLE: str = "voice-platform-conversations"
 
     # Amazon Bedrock (LLM)
-    BEDROCK_MODEL_ID: str = "anthropic.claude-3-haiku-20240307-v1:0"
+    BEDROCK_MODEL_ID: str = "anthropic.claude-3-5-haiku-20241022-v1:0"
     BEDROCK_MAX_TOKENS: int = 500
     BEDROCK_TEMPERATURE: float = 0.7
 

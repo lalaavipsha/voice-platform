@@ -306,7 +306,7 @@ Resources:
             - Name: AWS_S3_BUCKET
               Value: voice-platform-dev-audio-992382481256
             - Name: BEDROCK_MODEL_ID
-              Value: anthropic.claude-3-haiku-20240307-v1:0
+              Value: anthropic.claude-3-5-haiku-20241022-v1:0
             - Name: POLLY_VOICE_ID
               Value: Matthew
             - Name: POLLY_ENGINE
